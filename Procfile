@@ -1,2 +1,2 @@
 
-web: gunicorn Traffic-Sign-Recognition-app.wsgi
+web: gunicorn app.wsgi
