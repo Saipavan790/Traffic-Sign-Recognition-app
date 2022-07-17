@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>
+        Your Prediction!
+    </title>
+</head>
+
+<body>
+    <div>
+        <h1>Prediction using Convolutional Neural Network</h1>
+        <p class="text-light"> My model gave this prediction: </p>
+        <p>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <span>
+                {% set path = messages[2]~'.png'%}
+                <img src="../public/{{path}}" alt="" width="120" height="90">
+                <table style="border:2px solid black;margin-left:auto;margin-right:auto;">
+                    <tr>
+                        <td><strong>Traffic Sign :</strong></td>
+                        <td>{{ messages[0] }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accuracy :</strong></td>
+                        <td>{{ "%.2f"|format(messages[1]|float) }}%</td>
+                    </tr>
+
+
+                </table>
+            </span>
+            {% endif %}
+            {% endwith %}
+        </p>
+    </div>
+
+</body>
+
+</html>
