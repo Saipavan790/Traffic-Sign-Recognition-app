@@ -9,7 +9,7 @@ import os
 
 
 def model_predict(filename, loaded_model):
-    image = load_img('uploads/'+filename)
+    image = load_img(os.path.join(os.getcwd(), 'uploads', filename))
     classes = ['Speed limit (20km/hr)', 'Speed limit (30km/hr)', 'Speed limit (50km/hr)',
                'Speed limit (60km/hr)', 'Speed limit (70km/hr)', 'Speed limit (80km/hr)',
                'End of speed limit (80km/hr)', 'Speed limit (100km/hr)', 'Speed limit (120km/hr)',
@@ -38,8 +38,9 @@ def model_predict(filename, loaded_model):
 
 app = Flask(__name__)
 app.secret_key = "secret key"
-model = tf.keras.models.load_model('my_model')
-app.config['UPLOAD_FOLDER'] = 'uploads'
+base_dir = os.path.dirname(os.path.abspath(__file__))
+model = tf.keras.models.load_model(os.path.join(base_dir, 'my_model'))
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')
 
 
 @app.route('/')
@@ -47,7 +48,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def submit_file():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -61,15 +62,9 @@ def submit_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             label, acc, idx = model_predict(filename, model)
-            flash(label)
-            flash(acc)
-            flash(idx)
-            return redirect('/predict')
-
-
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
-    return render_template('predict.html')
+            img_path = os.path.join('..\static\images', idx+'.png')
+            return render_template('predict.html', predictions={'class': label,
+                                                                'acc': acc}, img_path=img_path)
 
 
 if __name__ == '__main__':

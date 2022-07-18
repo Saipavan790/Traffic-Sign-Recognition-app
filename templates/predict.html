@@ -18,31 +18,18 @@
         <h1>Prediction using Convolutional Neural Network</h1>
         <p class="text-light"> My model gave this prediction: </p>
         <p>
-
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <span>
-                {% set path = messages[2]~'.png'%}
-
-                <img src=url(/images/{{path}}) alt="text" width="150" height="150">
-                <table style="border:2px solid black;margin-left:auto;margin-right:auto;">
-                    <tr>
-                        <td><strong>Traffic Sign :</strong></td>
-                        <td>{{ messages[0] }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Accuracy :</strong></td>
-                        <td>{{ "%.2f"|format(messages[1]|float) }}%</td>
-                    </tr>
-
-
-                </table>
-            </span>
+            <img src="{{img_path}}" class="center" />
+            {% if predictions %}
+            Label Name : {{predictions['class']}}
+            <br>
+            Accuracy : {{'%0.2f'| format(predictions['acc']|float)}}
             {% endif %}
-            {% endwith %}
-        </p>
-    </div>
 
+        </p>
+        <form class="anybutton">
+            <input type="button" value="Predict Again" onclick="history.back()">
+        </form>
+    </div>
 </body>
 
 </html>
